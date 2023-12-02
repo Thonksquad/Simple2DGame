@@ -41,6 +41,7 @@ namespace TarodevController
         {
             _source = GetComponent<AudioSource>();
             _player = GetComponentInParent<IPlayerController>();
+            _player = GetComponentInParent<PlayerController>();
         }
 
         private void OnEnable()
@@ -48,14 +49,16 @@ namespace TarodevController
             _player.Jumped += OnJumped;
             _player.GroundedChanged += OnGroundedChanged;
             _moveParticles.Play();
-            Spawn.HitPlayer += HandleDeath;
+            _player.TakeDamage += HandleDeath;
+            _player.Revive += HandleRevive;
         }
 
         private void OnDisable()
         {
             _player.Jumped -= OnJumped;
             _player.GroundedChanged -= OnGroundedChanged;
-            Spawn.HitPlayer -= HandleDeath;
+            _player.TakeDamage -= HandleDeath;
+            _player.Revive -= HandleRevive;
             _moveParticles.Stop();
         }
 
@@ -78,6 +81,11 @@ namespace TarodevController
         {
             isDead = true;
             _sprite.sprite = _dead;
+        }
+        private void HandleRevive()
+        {
+            isDead = false;
+            _sprite.sprite = _alive;
         }
 
         private void HandleSpriteFlip(float xInput)

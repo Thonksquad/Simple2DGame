@@ -21,13 +21,17 @@ namespace TarodevController
         private Vector2 _frameVelocity;
         private int _fixedFrame;
         private bool _cachedQueryStartInColliders;
+        private bool isAlive = true;
+
+
 
         #region Interface
 
         public Vector2 FrameInput => _frameInput.Move;
         public event Action<bool, float> GroundedChanged;
         public event Action Jumped;
-
+        public event Action TakeDamage;
+        public event Action Revive;
         #endregion
 
         private void Awake()
@@ -47,16 +51,6 @@ namespace TarodevController
         }
 
         private void Update() => GatherInput();
-
-        private void OnEnable()
-        {
-            Spawn.HitPlayer += HandleDeath;
-        }
-
-        private void OnDisable()
-        {
-            Spawn.HitPlayer -= HandleDeath;
-        }
 
         private void HandleDeath()
         {
@@ -145,6 +139,21 @@ namespace TarodevController
             }
             
             Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (isAlive && collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+            {
+                TakeDamage?.Invoke();
+                isAlive = false;
+            }
+
+            if (!isAlive && collision.gameObject.TryGetComponent<Revive>(out Revive revive))
+            {
+                Revive?.Invoke();
+                isAlive = true;
+            }
         }
 
         #endregion
@@ -245,5 +254,7 @@ namespace TarodevController
 
         public event Action Jumped;
         public Vector2 FrameInput { get; }
+        public event Action TakeDamage;
+        public event Action Revive;
     }
 }

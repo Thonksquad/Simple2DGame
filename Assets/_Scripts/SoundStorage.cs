@@ -1,6 +1,7 @@
 using AudioSystem;
 using System.Collections;
 using System.Collections.Generic;
+using TarodevController;
 using UnityEngine;
 
 public class SoundStorage : MonoBehaviour
@@ -8,14 +9,10 @@ public class SoundStorage : MonoBehaviour
     [Header("Background music")]
     [Tooltip("Currently BGM")]
     [SerializeField] AudioSource _bgmSource;
-    [SerializeField] AudioClip _backgroundMusic;
+    [SerializeField] AudioClip _aliveMusic;
+    [SerializeField] AudioClip _deadMusic;
 
     // basic range of UI sound clips
-    [Header("UI Sounds")]
-    [Tooltip("General button click.")]
-    [SerializeField] AudioClip _defaultButtonSound;
-    [Tooltip("General button click.")]
-    [SerializeField] AudioClip _altButtonSound;
     [Tooltip("General shop purchase clip.")]
     [SerializeField] AudioClip _transactionSound;
     [Tooltip("General error sound.")]
@@ -27,16 +24,41 @@ public class SoundStorage : MonoBehaviour
     [Tooltip("Level defeat sound.")]
     [SerializeField] AudioClip _defeatSound;
 
-    private Spawn _spawn;
+    private PlayerController _player;
 
-    public void PlayMainMenuSound()
+    private void Awake()
     {
-        AudioHandler.Instance.PlayOneShotSound("UI", _defaultButtonSound, transform.position, .5f, 0f, 127);
+        _player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
     }
 
-    public void PlaySubmenuSound()
+    private void Start()
     {
-        AudioHandler.Instance.PlayOneShotSound("UI", _altButtonSound, transform.position, .5f, 0f, 80);
+        PlayAliveMusic();
+    }
+
+    private void OnEnable()
+    {
+        _player.TakeDamage += HandleDefeat;
+        _player.Revive += HandleRevive;
+    }
+
+    private void OnDisable()
+    {
+        _player.TakeDamage -= HandleDefeat;
+        _player.Revive -= HandleRevive;
+    }
+
+    private void HandleDefeat()
+    {
+        AudioHandler.Instance.SetTrackVolume("Music", -22, 1);
+        PlayDefeatSound();
+        Invoke(nameof(PlayDeadMusic), 3.5f);
+    }
+    private void HandleRevive()
+    {
+        AudioHandler.Instance.SetTrackVolume("Music", -15, 2);
+        PlayVictorySound();
+        Invoke(nameof(PlayAliveMusic), 1);
     }
 
     public void PlayTransactionSound()
@@ -46,7 +68,7 @@ public class SoundStorage : MonoBehaviour
 
     public void PlayErrorSound()
     {
-        AudioHandler.Instance.PlayOneShotSound("UI", _defaultWarningSound, transform.position, .5f, 0f, 127);
+        AudioHandler.Instance.PlayOneShotSound("UI", _defaultWarningSound, transform.position, .5f, 0f, 120);
     }
 
     public void PlayVictorySound()
@@ -56,34 +78,19 @@ public class SoundStorage : MonoBehaviour
 
     public void PlayDefeatSound()
     {
-        AudioHandler.Instance.PlayOneShotSound("Scene", _defeatSound, transform.position, .5f, 0f, 127);
+        AudioHandler.Instance.PlayOneShotSound("Scene", _defeatSound, transform.position, 1, 0f, 127);
     }
 
-    public void PlayMusic()
+    public void PlayAliveMusic()
     {
-        _bgmSource.clip = _backgroundMusic;
+        _bgmSource.clip = _aliveMusic;
         _bgmSource.Play();
     }
 
-    private void Start()
+    private void PlayDeadMusic()
     {
-        PlayMusic();
-    }
-
-    private void OnEnable()
-    {
-        Spawn.HitPlayer += HandleDefeat;
-    }
-
-    private void OnDisable()
-    {
-        Spawn.HitPlayer -= HandleDefeat;
-    }
-
-    private void HandleDefeat()
-    {
-        AudioHandler.Instance.SetTrackVolume("Music", -100, 2);
-        PlayDefeatSound();
+        _bgmSource.clip = _deadMusic;
+        _bgmSource.Play();
     }
 
 }
