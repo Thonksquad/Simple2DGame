@@ -17,7 +17,7 @@ public class SpawnHandler : MonoBehaviour
     [SerializeField] private bool _useSpikesPool;
     [SerializeField] private bool _useRevivePool;
     [SerializeField] private PlayerController _player;
-    [SerializeField] private StartSwitch _startSwitch;
+    [SerializeField] private RedSwitch _startSwitch;
 
     public Coroutine CurrentSpawn;
     private ObjectPool<Enemy> _enemyPool;
