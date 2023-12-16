@@ -15,13 +15,15 @@ namespace TarodevController
     {
 
         [SerializeField] private ScriptableStats _stats;
+        [SerializeField] private GameHandler _gameHandler;
         private Rigidbody2D _rb;
         private CapsuleCollider2D _col;
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private int _fixedFrame;
         private bool _cachedQueryStartInColliders;
-        private bool isAlive = true;
+        public bool isAlive = true;
+        private bool isPlaying = true;
 
 
 
@@ -44,24 +46,51 @@ namespace TarodevController
 
         private void Start()
         {
-            _stats.AirAcceleration = 200;
-            _stats.AirMaxSpeed = 20;
-            _stats.GroundAcceleration = 100;
-            _stats.GroundMaxSpeed = 10;
+            HandleAlive();
+        }
+
+        private void OnEnable()
+        {
+            _gameHandler.GameFinished += HandleFinish;
+        }
+
+        private void OnDisable()
+        {
+            _gameHandler.GameFinished -= HandleFinish;
         }
 
         private void Update() => GatherInput();
 
+        private void HandleFinish()
+        {
+            isPlaying = false;
+        }
+
+        private void HandleRestart()
+        {
+            isPlaying = true;
+        }
+
+        private void HandleAlive()
+        {
+            _stats.AirAcceleration = 200;
+            _stats.AirMaxSpeed = 20;
+            _stats.GroundAcceleration = 100;
+            _stats.GroundMaxSpeed = 12;
+        }
+
         private void HandleDeath()
         {
-            _stats.AirAcceleration = 400;
-            _stats.AirMaxSpeed = 40;
-            _stats.GroundAcceleration = 200;
-            _stats.GroundMaxSpeed = 20;
+            _stats.AirAcceleration = 300;
+            _stats.AirMaxSpeed = 30;
+            _stats.GroundAcceleration = 150;
+            _stats.GroundMaxSpeed = 12;
         }
 
         private void GatherInput()
         {
+            if (!isPlaying) return;
+
             _frameInput = new FrameInput
             {
                 JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
@@ -87,7 +116,6 @@ namespace TarodevController
             _fixedFrame++;
 
             CheckCollisions();
-
             HandleJump();
             HandleHorizontal();
             HandleVertical();
@@ -147,12 +175,14 @@ namespace TarodevController
             {
                 TakeDamage?.Invoke();
                 isAlive = false;
+                HandleDeath();
             }
 
             if (!isAlive && collision.gameObject.TryGetComponent<Revive>(out Revive revive))
             {
                 Revive?.Invoke();
                 isAlive = true;
+                HandleAlive();
             }
         }
 

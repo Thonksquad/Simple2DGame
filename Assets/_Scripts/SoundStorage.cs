@@ -9,7 +9,9 @@ public class SoundStorage : MonoBehaviour
     [Header("Background music")]
     [Tooltip("Currently BGM")]
     [SerializeField] AudioSource _bgmSource;
+    [Tooltip("Theme for when character is alive")]
     [SerializeField] AudioClip _aliveMusic;
+    [Tooltip("Theme for when character is dead")]
     [SerializeField] AudioClip _deadMusic;
 
     // basic range of UI sound clips
@@ -19,6 +21,8 @@ public class SoundStorage : MonoBehaviour
     [SerializeField] AudioClip _defaultWarningSound;
 
     [Header("Game Sounds")]
+    [Tooltip("Near miss sound effect")]
+    [SerializeField] AudioClip _nearMissSound;
     [Tooltip("Level up or level win sound.")]
     [SerializeField] AudioClip _victorySound;
     [Tooltip("Level defeat sound.")]
@@ -40,23 +44,23 @@ public class SoundStorage : MonoBehaviour
     {
         _player.TakeDamage += HandleDefeat;
         _player.Revive += HandleRevive;
+        Enemy.NearMiss += PlayNearMiss;
     }
 
     private void OnDisable()
     {
         _player.TakeDamage -= HandleDefeat;
         _player.Revive -= HandleRevive;
+        Enemy.NearMiss -= PlayNearMiss;
     }
 
     private void HandleDefeat()
     {
-        AudioHandler.Instance.SetTrackVolume("Music", -22, 1);
         PlayDefeatSound();
-        Invoke(nameof(PlayDeadMusic), 3.5f);
+        Invoke(nameof(PlayDeadMusic), 3f);
     }
     private void HandleRevive()
     {
-        AudioHandler.Instance.SetTrackVolume("Music", -15, 2);
         PlayVictorySound();
         Invoke(nameof(PlayAliveMusic), 1);
     }
@@ -81,14 +85,21 @@ public class SoundStorage : MonoBehaviour
         AudioHandler.Instance.PlayOneShotSound("Scene", _defeatSound, transform.position, 1, 0f, 127);
     }
 
+    public void PlayNearMiss()
+    {
+        AudioHandler.Instance.PlayOneShotSound("Scene", _nearMissSound, transform.position, 1, 0f, 120); ;
+    }
+
     public void PlayAliveMusic()
     {
+        AudioHandler.Instance.SetTrackVolume("Music", -15, 2);
         _bgmSource.clip = _aliveMusic;
         _bgmSource.Play();
     }
 
     private void PlayDeadMusic()
     {
+        AudioHandler.Instance.SetTrackVolume("Music", -22, 1);
         _bgmSource.clip = _deadMusic;
         _bgmSource.Play();
     }

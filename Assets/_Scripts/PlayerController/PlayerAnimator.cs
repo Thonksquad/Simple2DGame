@@ -14,6 +14,8 @@ namespace TarodevController
         [SerializeField] private Sprite _alive;
         [SerializeField] private Sprite _dead;
 
+        [Header("Reference external scripts")]
+
         [Header("Settings")] [SerializeField, Range(1f, 3f)]
         private float _maxIdleSpeed = 2;
 

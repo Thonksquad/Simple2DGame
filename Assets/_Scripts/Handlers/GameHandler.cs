@@ -2,22 +2,35 @@ using System;
 using System.Collections;
 using TarodevController;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class GameHandler : MonoBehaviour
 {
+    [Header("External references")]
     [SerializeField] private UIDocument _gameUI;
     [SerializeField] private StyleSheet _styleSheet;
     [SerializeField] private RedSwitch _redSwitch;
     [SerializeField] private BlueSwitch _blueSwitch;
     [SerializeField] private PlayerController _player;
+    [SerializeField] private SoundStorage _soundStorage;
+
     private VisualElement _root;
     private Slider _slider;
     private VisualElement _draggable;
-    VisualElement _game;
+    private Button _restartButton;
+    private VisualElement _gameScreen;
+    private VisualElement _endingScreen;
+    private Label _announcement;
+    private VisualElement _graphic;
+    private Label _time;
+
+    private IVisualElementScheduledItem _sliderSchedule;
     private Coroutine _gameTracker;
     private float _gameTime;
     private bool _isAlive;
+
+    public event Action GameFinished;
 
     private void OnEnable()
     {
@@ -25,6 +38,7 @@ public class GameHandler : MonoBehaviour
         _redSwitch.RedPressed += RedEvents;
         _player.TakeDamage += SwapToDead;
         _player.Revive += SwapToAlive;
+        Enemy.NearMiss += HandleNearMiss;
     }
 
     private void OnDisable()
@@ -33,6 +47,7 @@ public class GameHandler : MonoBehaviour
         _redSwitch.RedPressed -= RedEvents;
         _player.TakeDamage -= SwapToDead;
         _player.Revive -= SwapToAlive;
+        Enemy.NearMiss -= HandleNearMiss;
     }
 
     private void Awake()
@@ -42,8 +57,12 @@ public class GameHandler : MonoBehaviour
         _slider.SetEnabled(false);
         _draggable = _root.Q<VisualElement>("unity-dragger");
         _draggable.AddToClassList("spriteAlive");
-        _game = _root.Q<VisualElement>("gameContainer");
-
+        _gameScreen = _root.Q<VisualElement>("gameContainer");
+        _restartButton = _root.Q<Button>("Restart");
+        _endingScreen = _root.Q<VisualElement>("EndingScreen");
+        _announcement = _root.Q<Label>("Announcement");
+        _graphic = _root.Q<VisualElement>("Graphic");
+        _time = _root.Q<Label>("Time");
     }
 
     private void SwapToAlive()
@@ -77,18 +96,22 @@ public class GameHandler : MonoBehaviour
         VisualElement tutorial = _root.Q<VisualElement>("tutorialContainer");
         tutorial.AddToClassList("hidden");
 
-        _game.RemoveFromClassList("hidden");
+        _gameScreen.RemoveFromClassList("hidden");
         _gameTracker = StartCoroutine(StartGameTimer());
     }
 
     IEnumerator StartGameTimer()
     {
+        _gameTime = 0;
+        _isAlive = true;
         _slider.value = 0.1f;
+
+        SwapToAlive();
 
         while (_slider.value > 0 && _slider.value < 100)
         {
             _gameTime += Time.deltaTime;
-            var rate = _isAlive ? 1.25f : -2f;
+            var rate = _isAlive ? 2f : -MathF.Max((_slider.value/20), 1f);
             _slider.value += rate * Time.deltaTime;
 
             yield return null;
@@ -99,27 +122,70 @@ public class GameHandler : MonoBehaviour
 
     private void EvaluateVictory()
     {
-        VisualElement endingScreen = _root.Q<VisualElement>("EndingScreen");
-        Label announcement = _root.Q<Label>("Announcement");
-        VisualElement graphic = _root.Q<VisualElement>("Graphic");
-        Label time = _root.Q<Label>("Time");
-
-        _game.AddToClassList("hidden");
-        endingScreen.RemoveFromClassList("hidden");
+        _gameScreen.AddToClassList("hidden");
+        _endingScreen.RemoveFromClassList("hidden");
+        GameFinished?.Invoke();
 
         if (_slider.value <= 0)
         {
-            announcement.text = "VICTORY";
-            graphic.AddToClassList("spriteDead");
+            _announcement.text = "DEFEAT";
+            _graphic.AddToClassList("spriteDead");
+            _soundStorage.PlayDefeatSound();
         }
 
         if (_slider.value >= 100)
         {
-            announcement.text = "DEFEAT";
-            graphic.AddToClassList("spriteAlive");
+            _announcement.text = "VICTORY";
+            _graphic.AddToClassList("spriteAlive");
+            _soundStorage.PlayVictorySound();
         }
 
-        time.text = "FINAL TIME: " + Math.Round(_gameTime,2);
+        _time.text = "FINAL TIME: " + Math.Round(_gameTime,2);
+
+        _restartButton.clicked += RestartGame; 
     }
 
+    private void RestartGame()
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex);
+    }
+
+    private void HandleNearMiss()
+    {
+        if (_isAlive)
+        {
+            StartCoroutine(NearMissBonus(_slider.value));
+
+            if (_sliderSchedule != null) return;
+            _slider.RegisterCallback<TransitionEndEvent>(OnStateTransitionEnd);
+            _sliderSchedule = _slider.schedule.Execute(() => _slider.ToggleInClassList("dragger-bounce")).StartingIn(150);
+        }
+    }
+    
+    private void OnStateTransitionEnd(TransitionEndEvent evt)
+    {
+        _sliderSchedule = null;
+        _slider.ToggleInClassList("dragger-bounce");
+        _slider.UnregisterCallback<TransitionEndEvent>(OnStateTransitionEnd);
+    }
+
+    private IEnumerator NearMissBonus(float originalValue)
+    {
+        float slowMoBonus = 3f;
+        float slowMoDuration = 0.1f;
+        float timer = 0f;
+        float startValue = _slider.value;
+        float endValue = _slider.value + slowMoBonus;
+
+        yield return new WaitForSeconds(.05f);
+
+        while (timer < slowMoDuration)
+        {
+            timer += Time.unscaledDeltaTime;
+            float t = timer / slowMoDuration;
+            _slider.value = Mathf.Lerp(startValue, endValue, t);
+            yield return null;
+        }
+    }
 }

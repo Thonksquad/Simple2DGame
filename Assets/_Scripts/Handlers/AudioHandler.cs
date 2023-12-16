@@ -50,7 +50,9 @@ namespace AudioSystem
 
         private void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+            // If creating multiple scenes where audio needs to keep playing
+            // Uncomment this out
+            //DontDestroyOnLoad(gameObject);
             if (!_mixer) return;
             AudioMixerGroup[] groups = _mixer.FindMatchingGroups(string.Empty);
 

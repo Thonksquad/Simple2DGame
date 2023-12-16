@@ -14,7 +14,7 @@ public class RedSwitch : MonoBehaviour
         if (collision.gameObject.TryGetComponent<PlayerController>(out PlayerController _player))
         {
             RedPressed?.Invoke();
-            SpawnHandler.Instance.StartGame();
+            SpawnHandler.Instance.HandleStart();
         }
     }
 

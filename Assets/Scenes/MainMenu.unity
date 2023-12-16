@@ -148,7 +148,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 11315205}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 24.8, z: 0}
+  m_LocalPosition: {x: 0, y: 30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -169,14 +169,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spikesPrefab: {fileID: 8128114507418872603, guid: 4bae22f86a905894083f99421f050ec9, type: 3}
   _revivePrefab: {fileID: 5004638589621132916, guid: 06e2ef118104ad14784b15f60ed3ee8f, type: 3}
-  _currentSpikes: 10
+  _startingSpikes: 5
+  _currentSpikes: 5
+  _startingRevives: 1
   _currentRevive: 1
-  _MaxSpikes: 20
+  _MaxSpikes: 15
   _MaxRevives: 3
   _useSpikesPool: 1
   _useRevivePool: 0
   _player: {fileID: 1921210487}
-  _startSwitch: {fileID: 0}
+  _startSwitch: {fileID: 7102823686737056287}
+  _gameHandler: {fileID: 47940322}
 --- !u!1 &47940320
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,6 +229,7 @@ MonoBehaviour:
   _redSwitch: {fileID: 7102823686737056287}
   _blueSwitch: {fileID: 1975846778}
   _player: {fileID: 1921210487}
+  _soundStorage: {fileID: 1524802401}
 --- !u!1 &97844006
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,7 +256,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 97844006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0062, y: -11.2, z: 0}
+  m_LocalPosition: {x: 0.0062, y: -9.6, z: 0}
   m_LocalScale: {x: 69.37014, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -667,6 +671,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19ba59efc19fec4f944270dc8fbcfc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _offset: {x: 0, y: 6.6, z: -10}
+  _smoothTime: 0.3
+  _velocity: {x: 0, y: 0, z: 0}
   _player: {fileID: 1921210484}
 --- !u!1 &619394800
 GameObject:
@@ -1029,6 +1036,7 @@ MonoBehaviour:
   _deadMusic: {fileID: 8300000, guid: e0a1e0015759c894abc8dfc9c03c1410, type: 3}
   _transactionSound: {fileID: 8300000, guid: 3645b8f704a540a498aa45543c048da2, type: 3}
   _defaultWarningSound: {fileID: 8300000, guid: 1dd857eeb30fa834c83bad8ebeaf1869, type: 3}
+  _nearMissSound: {fileID: 8300000, guid: 4af7cb945d874d749801df90910e6bca, type: 3}
   _victorySound: {fileID: 8300000, guid: c6bc41c5933607445a0056e8a70e3a4e, type: 3}
   _defeatSound: {fileID: 8300000, guid: d5667b69bd67e04499fd2fc979954fed, type: 3}
 --- !u!82 &1524802402
@@ -1168,6 +1176,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1428663709}
     m_Modifications:
+    - target: {fileID: 1544650614272011792, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: _gameHandler
+      value: 
+      objectReference: {fileID: 47940322}
     - target: {fileID: 1544650614272011794, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
       propertyPath: m_Size.x
       value: 0.7743192
@@ -1276,6 +1288,10 @@ PrefabInstance:
       propertyPath: isDead
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2969068311962969431, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: _gameHandler
+      value: 
+      objectReference: {fileID: 47940322}
     - target: {fileID: 2969068311962969768, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
       propertyPath: Mute
       value: 0
@@ -1587,7 +1603,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7766415849605000893, guid: 5ec19713c3e2cb94cbfa6153c976ec64, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.9
+      value: -0.04
       objectReference: {fileID: 0}
     - target: {fileID: 7766415849605000893, guid: 5ec19713c3e2cb94cbfa6153c976ec64, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1638,7 +1654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3587477328625701069}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.35, y: -5.93, z: 0}
+  m_LocalPosition: {x: 8.84, y: -5.93, z: 0}
   m_LocalScale: {x: 2, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

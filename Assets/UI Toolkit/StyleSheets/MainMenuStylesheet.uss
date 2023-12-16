@@ -82,21 +82,9 @@
 }
 
 .slider {
-    margin-top: 3%;
+    margin-top: 4%;
     width: 85%;
     height: 50%;
-}
-
-.unity-base-slider__dragger {
-    height: 50px;
-    width: 40px;
-    border-radius: 10px;
-    margin-top: -35px;
-    border-top-width: 0;
-    border-right-width: 0;
-    border-left-width: 0;
-    border-bottom-width: 0;
-    background-color: rgba(255, 255, 255, 0.01);
 }
 
 .spriteAlive {
@@ -105,6 +93,23 @@
 
 .spriteDead {
     background-image: var(--sprite-dead);
+}
+
+.dragger .unity-base-slider__dragger {
+    height: 50px;
+    width: 40px;
+    border-radius: 10px;
+    position: relative;
+    margin-top: -35px;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-left-width: 0;
+    border-bottom-width: 0;
+    background-color: rgba(255, 255, 255, 0.01);
+    scale: 1;
+    transition-timing-function: ease-out-back;
+    transition-property: all;
+    transition-duration: 0.1s;
 }
 
 .unity-base-slider__tracker {
@@ -116,8 +121,8 @@
 }
 
 .endingGroupContainer {
-    width: 50%;
-    height: 40%;
+    width: 40%;
+    height: 25%;
     align-items: center;
     flex-direction: row;
     padding: 10px;
@@ -142,6 +147,15 @@
 }
 
 .endingGraphic {
-    width: 35%;
-    height: 70%;
+    margin-left: 3%;
+    width: 10%;
+    height: 25%;
+}
+
+.dragger-bounce .unity-base-slider__dragger {
+    scale: 1.1 1.2;
+    position: absolute;
+    margin-top: -50px;
+    transition-property: all;
+    transition-duration: .15s;
 }

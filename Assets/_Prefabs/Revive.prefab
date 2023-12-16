@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2452015935077027160}
   - component: {fileID: 252322249523478839}
   - component: {fileID: 5004638589621132916}
+  - component: {fileID: 8543478829178558942}
   m_Layer: 6
   m_Name: Revive
   m_TagString: Untagged
@@ -99,7 +100,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 3
+  m_Mass: 4
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0.5
@@ -171,4 +172,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4a5f43b61df824eb2151b7df86be1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _soundClip: {fileID: 8300000, guid: 1b52df391b65c38499161bfc1e462241, type: 3}
+  _missedClip: {fileID: 0}
+--- !u!114 &8543478829178558942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8594859020606588282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6291422ccd9eb1489ee0f5eed942c6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 2800000, guid: cc863346e84ab4c4e9a3b273cf42ddc5, type: 3}
+  Arrow: {fileID: 2800000, guid: f525ae6c5bd593647807fb918c15c353, type: 3}
+  Color: {r: 0.6499511, g: 0.9716981, b: 0.6270203, a: 1}

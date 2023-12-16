@@ -10,14 +10,17 @@ public class SpawnHandler : MonoBehaviour
 {
     [SerializeField] private Enemy _spikesPrefab;
     [SerializeField] private Revive _revivePrefab;
-    [SerializeField] private float _currentSpikes = 10;
-    [SerializeField] private float _currentRevive = 1;
-    [SerializeField] private int _MaxSpikes = 20;
-    [SerializeField] private int _MaxRevives = 5;
+    [SerializeField] private float _startingSpikes;
+    [SerializeField] private float _currentSpikes;
+    [SerializeField] private float _startingRevives;
+    [SerializeField] private float _currentRevive;
+    [SerializeField] private int _MaxSpikes;
+    [SerializeField] private int _MaxRevives;
     [SerializeField] private bool _useSpikesPool;
     [SerializeField] private bool _useRevivePool;
     [SerializeField] private PlayerController _player;
     [SerializeField] private RedSwitch _startSwitch;
+    [SerializeField] private GameHandler _gameHandler;
 
     public Coroutine CurrentSpawn;
     private ObjectPool<Enemy> _enemyPool;
@@ -35,21 +38,18 @@ public class SpawnHandler : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
     private void OnEnable()
     {
         _player.TakeDamage += HandleDefeat;
         _player.Revive += HandleRevive;
+        _gameHandler.GameFinished += HandleGameFinish;
     }
 
     private void OnDisable()
     {
         _player.TakeDamage -= HandleDefeat;
         _player.Revive -= HandleRevive;
+        _gameHandler.GameFinished -= HandleGameFinish;
     }
 
     private void Start()
@@ -91,39 +91,46 @@ public class SpawnHandler : MonoBehaviour
         }, false, 10, 20);
     }
 
-    public void StartGame()
+    public void HandleStart()
     {
+        _currentSpikes = _startingSpikes;
+        _currentRevive = _startingRevives;
         CurrentSpawn = StartCoroutine(StartObstacles(3));
     }
 
+    public void HandleGameFinish()
+    {
+        StopCoroutine(CurrentSpawn);
+    }
 
     private void SpawnObstacles()
     {
-        if (_currentSpikes < _MaxSpikes)
-        {
-            _currentSpikes += 2;
-        }
-
-        for (int i = 0; i < _currentSpikes; i++)
+        for (int i = 0; i < Mathf.FloorToInt(_currentSpikes); i++)
         {
             var spawn = _useSpikesPool ? _enemyPool.Get() : Instantiate(_spikesPrefab);
             spawn.transform.position = transform.position + (Vector3)Random.insideUnitCircle * 18;
             spawn.Init(KillEnemy);
         }
+
+        if (_currentSpikes < _MaxSpikes)
+        {
+            _currentSpikes += 1.5f;
+        }
+
     }
 
     private void SpawnRevives()
     {
-        if (_currentRevive < _MaxRevives)
-        {
-            _currentRevive += .25f;
-        }
-
         for (int i = 0; i < Mathf.FloorToInt(_currentRevive); i++)
         {
             var spawn = _useRevivePool ? _revivePool.Get() : Instantiate(_revivePrefab);
-            spawn.transform.position = transform.position + (Vector3)Random.insideUnitCircle * 18;
+            spawn.transform.position = transform.position + (Vector3)Random.insideUnitCircle * 10;
             spawn.Init(KillRevive);
+        }
+
+        if (_currentRevive < _MaxRevives)
+        {
+            _currentRevive += .25f;
         }
     }
 

@@ -13,8 +13,10 @@ GameObject:
   - component: {fileID: 6688399372707489457}
   - component: {fileID: 8128114507418872603}
   - component: {fileID: 5042836485187512920}
+  - component: {fileID: 6563803400892276537}
+  - component: {fileID: 2118893191533594066}
   m_Layer: 6
-  m_Name: Shape
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +105,7 @@ Rigidbody2D:
   m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 1.5
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -173,6 +175,65 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.60055715, y: 0.30213255}
   m_EdgeRadius: 0
+--- !u!61 &6563803400892276537
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2996875975397484569}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.0070120096, y: 0.8413613}
+  m_SpriteTilingProperty:
+    border: {x: 0.22999999, y: 0, z: 0.22999999, w: 0.32999998}
+    pivot: {x: 0.49894536, y: 0.0022356168}
+    oldSize: {x: 0.7, y: 0.7}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.0262377, y: 1.3094239}
+  m_EdgeRadius: 0
+--- !u!114 &2118893191533594066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2996875975397484569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6291422ccd9eb1489ee0f5eed942c6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indicatorTexture: {fileID: 2800000, guid: f525ae6c5bd593647807fb918c15c353, type: 3}
+  indicatorSize: 25
 --- !u!1 &7830825838479003587
 GameObject:
   m_ObjectHideFlags: 0

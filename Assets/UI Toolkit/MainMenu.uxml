@@ -11,9 +11,9 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="gameContainer" class="container gameContainer hidden" style="flex-grow: 1; background-color: rgba(56, 56, 56, 0); max-height: 10%;">
-        <ui:Slider picking-mode="Ignore" value="0" high-value="100" focusable="false" name="Progression" class="slider" />
+        <ui:Slider picking-mode="Ignore" value="0" high-value="100" focusable="false" name="Progression" class="dragger slider" />
     </ui:VisualElement>
-    <ui:VisualElement name="EndingScreen" class="container endingContainer hidden">
+    <ui:VisualElement name="EndingScreen" class="container endingContainer hidden" style="background-color: rgb(14, 14, 14);">
         <ui:Label tabindex="-1" text="VICTORY" display-tooltip-when-elided="true" name="Announcement" class="title" />
         <ui:VisualElement name="EndingGroupContainer" class="endingGroupContainer bordered-box" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
             <ui:VisualElement name="Graphic" class="endingGraphic" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); max-width: 35%; max-height: 90%;" />
