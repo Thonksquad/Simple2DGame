@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4a5f43b61df824eb2151b7df86be1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _missedClip: {fileID: 0}
+  _missedClip: {fileID: 8300000, guid: c6bc41c5933607445a0056e8a70e3a4e, type: 3}
 --- !u!114 &8543478829178558942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6291422ccd9eb1489ee0f5eed942c6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Icon: {fileID: 2800000, guid: cc863346e84ab4c4e9a3b273cf42ddc5, type: 3}
-  Arrow: {fileID: 2800000, guid: f525ae6c5bd593647807fb918c15c353, type: 3}
-  Color: {r: 0.6499511, g: 0.9716981, b: 0.6270203, a: 1}
+  _indicatorTexture: {fileID: 2800000, guid: f525ae6c5bd593647807fb918c15c353, type: 3}
+  _indicatorColor: {r: 0.27460247, g: 0.8962264, b: 0.13866138, a: 1}
+  _indicatorSize: 2

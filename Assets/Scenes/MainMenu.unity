@@ -170,7 +170,7 @@ MonoBehaviour:
   _spikesPrefab: {fileID: 8128114507418872603, guid: 4bae22f86a905894083f99421f050ec9, type: 3}
   _revivePrefab: {fileID: 5004638589621132916, guid: 06e2ef118104ad14784b15f60ed3ee8f, type: 3}
   _startingSpikes: 5
-  _currentSpikes: 5
+  _currentSpikes: 1
   _startingRevives: 1
   _currentRevive: 1
   _MaxSpikes: 15
@@ -256,7 +256,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 97844006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0062, y: -9.6, z: 0}
+  m_LocalPosition: {x: 0.0062, y: -8.3, z: 0}
   m_LocalScale: {x: 69.37014, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class OffScreenIndicator : MonoBehaviour
 {
-    public Texture2D indicatorTexture;
-    public float indicatorSize = 50f;
+    [SerializeField] private Texture2D _indicatorTexture;
+    [SerializeField] private Color _indicatorColor;
+    [SerializeField] private float _indicatorSize;
 
     private Camera mainCamera;
 
@@ -18,19 +19,36 @@ public class OffScreenIndicator : MonoBehaviour
 
         Vector3 screenPos = mainCamera.WorldToScreenPoint(transform.position);
 
-        if (screenPos.z > 0 && (screenPos.x < 0 || screenPos.x > Screen.width || screenPos.y < 0 || screenPos.y > Screen.height))
+        bool IsRenderable = (screenPos.x < 0 || screenPos.x > Screen.width || screenPos.y < 0 || screenPos.y > Screen.height) && screenPos.x >= 0 && screenPos.x <= Screen.width;
+
+        if (IsRenderable)
         {
             Vector3 indicatorPos = screenPos;
 
-            // Clamp the indicator position within the screen boundaries
-            indicatorPos.x = Mathf.Clamp(indicatorPos.x, indicatorSize / 2, Screen.width - indicatorSize / 2);
-            indicatorPos.y = Mathf.Clamp(indicatorPos.y, indicatorSize / 2, Screen.height - indicatorSize / 2);
+            var farAwayScale = 10;
+            var closeScale = 30;
 
-            // Convert screen position to GUI space
+            var yPos = screenPos.y;
+            var farOffPos = Screen.height * 2f;
+
+            // Calculate the scale based on the distance from the camera
+            var scale = Mathf.Lerp(farAwayScale, closeScale, Mathf.InverseLerp(farOffPos, 0, yPos));
+            float scaledIndicatorSize = _indicatorSize * scale;
+            float halfSize = scaledIndicatorSize / 2;
+
+            // Clamp the indicator position within the screen boundaries
+            indicatorPos.x = Mathf.Clamp(indicatorPos.x, halfSize, Screen.width - halfSize);
+
+            // Calculate the y position based on the scaled indicator size
+            var minYPos = halfSize;
+            var maxYPos = Screen.height - halfSize;
+            indicatorPos.y = Mathf.Clamp(indicatorPos.y, minYPos, maxYPos);
+
             Vector2 guiPos = new Vector2(indicatorPos.x, Screen.height - indicatorPos.y);
 
-            Rect indicatorRect = new Rect(guiPos.x - indicatorSize / 2, guiPos.y - indicatorSize / 2, indicatorSize, indicatorSize);
-            GUI.DrawTexture(indicatorRect, indicatorTexture);
+            Rect indicatorRect = new Rect(guiPos.x - halfSize, guiPos.y - halfSize, scaledIndicatorSize, scaledIndicatorSize);
+            GUI.color = _indicatorColor;
+            GUI.DrawTexture(indicatorRect, _indicatorTexture);
         }
     }
 }

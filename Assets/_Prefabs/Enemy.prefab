@@ -232,8 +232,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6291422ccd9eb1489ee0f5eed942c6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  indicatorTexture: {fileID: 2800000, guid: f525ae6c5bd593647807fb918c15c353, type: 3}
-  indicatorSize: 25
+  _indicatorTexture: {fileID: 2800000, guid: f525ae6c5bd593647807fb918c15c353, type: 3}
+  _indicatorColor: {r: 0.8679245, g: 0.117906675, b: 0.117906675, a: 1}
+  _indicatorSize: 3
 --- !u!1 &7830825838479003587
 GameObject:
   m_ObjectHideFlags: 0

@@ -116,7 +116,6 @@ public class SpawnHandler : MonoBehaviour
         {
             _currentSpikes += 1.5f;
         }
-
     }
 
     private void SpawnRevives()
