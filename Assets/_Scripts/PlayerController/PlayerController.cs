@@ -25,8 +25,6 @@ namespace TarodevController
         public bool isAlive = true;
         private bool isPlaying = true;
 
-
-
         #region Interface
 
         public Vector2 FrameInput => _frameInput.Move;

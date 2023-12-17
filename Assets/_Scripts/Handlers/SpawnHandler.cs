@@ -168,7 +168,6 @@ public class SpawnHandler : MonoBehaviour
 
     private void HandleDefeat()
     {
-        //Ensures the coroutine is only called once
         if (_useSpikesPool)
         {
             _useSpikesPool = false;
@@ -180,7 +179,6 @@ public class SpawnHandler : MonoBehaviour
 
     private void HandleRevive()
     {
-        //Ensures that the coroutine is only called once, bugged
         if (_useRevivePool)
         {
             _useRevivePool = false;

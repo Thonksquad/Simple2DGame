@@ -15,7 +15,13 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private PlayerController _player;
     [SerializeField] private SoundStorage _soundStorage;
 
+    [Header("Internal variables")]
+    [SerializeField] private float _nearMissBonus;
+    [SerializeField] private float _bonusDuration;
+    [SerializeField] private float _timer;
+
     private VisualElement _root;
+    private Label _timeCounter;
     private Slider _slider;
     private VisualElement _draggable;
     private Button _restartButton;
@@ -55,6 +61,7 @@ public class GameHandler : MonoBehaviour
         _root = _gameUI.rootVisualElement;
         _slider = _root.Q<Slider>("Progression");
         _slider.SetEnabled(false);
+        _timeCounter = _root.Q<Label>("InGameTimer");
         _draggable = _root.Q<VisualElement>("unity-dragger");
         _draggable.AddToClassList("spriteAlive");
         _gameScreen = _root.Q<VisualElement>("gameContainer");
@@ -62,7 +69,7 @@ public class GameHandler : MonoBehaviour
         _endingScreen = _root.Q<VisualElement>("EndingScreen");
         _announcement = _root.Q<Label>("Announcement");
         _graphic = _root.Q<VisualElement>("Graphic");
-        _time = _root.Q<Label>("Time");
+        _time = _root.Q<Label>("TimeCounter");
     }
 
     private void SwapToAlive()
@@ -106,17 +113,19 @@ public class GameHandler : MonoBehaviour
         _isAlive = true;
         _slider.value = 0.1f;
 
+
         SwapToAlive();
 
         while (_slider.value > 0 && _slider.value < 100)
         {
+            _timeCounter.text = "Time " + Math.Round(_gameTime);
             _gameTime += Time.deltaTime;
-            var rate = _isAlive ? 2f : -MathF.Max((_slider.value/20), 1f);
+
+            var rate = _isAlive ? 2f : -MathF.Max((_slider.value/18), 1f);
             _slider.value += rate * Time.deltaTime;
 
             yield return null;
         }
-
         EvaluateVictory();
     }
 
@@ -141,7 +150,6 @@ public class GameHandler : MonoBehaviour
         }
 
         _time.text = "FINAL TIME: " + Math.Round(_gameTime,2);
-
         _restartButton.clicked += RestartGame; 
     }
 
@@ -156,7 +164,6 @@ public class GameHandler : MonoBehaviour
         if (_isAlive)
         {
             StartCoroutine(NearMissBonus(_slider.value));
-
             if (_sliderSchedule != null) return;
             _slider.RegisterCallback<TransitionEndEvent>(OnStateTransitionEnd);
             _sliderSchedule = _slider.schedule.Execute(() => _slider.ToggleInClassList("dragger-bounce")).StartingIn(150);
@@ -172,18 +179,19 @@ public class GameHandler : MonoBehaviour
 
     private IEnumerator NearMissBonus(float originalValue)
     {
-        float slowMoBonus = 3f;
-        float slowMoDuration = 0.1f;
-        float timer = 0f;
-        float startValue = _slider.value;
-        float endValue = _slider.value + slowMoBonus;
+        yield return new WaitForSeconds(.01f);
+        if (!_isAlive) yield break;
+        float startValue = originalValue;
+        float endValue = _slider.value + _nearMissBonus;
 
-        yield return new WaitForSeconds(.05f);
+        _timer = 0f;
 
-        while (timer < slowMoDuration)
+        yield return new WaitForSeconds(.02f);
+
+        while (_timer < _bonusDuration)
         {
-            timer += Time.unscaledDeltaTime;
-            float t = timer / slowMoDuration;
+            _timer += Time.unscaledDeltaTime;
+            float t = _timer / _bonusDuration;
             _slider.value = Mathf.Lerp(startValue, endValue, t);
             yield return null;
         }

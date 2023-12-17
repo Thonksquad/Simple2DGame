@@ -26,6 +26,8 @@ namespace TarodevController
         [SerializeField] private ParticleSystem _launchParticles;
         [SerializeField] private ParticleSystem _moveParticles;
         [SerializeField] private ParticleSystem _landParticles;
+        [SerializeField] private ParticleSystem _SuccessParticles;
+        [SerializeField] private ParticleSystem _DefeatParticles;
 
         [Header("Audio Clips")] [SerializeField]
         private AudioClip[] _footsteps;
@@ -53,6 +55,7 @@ namespace TarodevController
             _moveParticles.Play();
             _player.TakeDamage += HandleDeath;
             _player.Revive += HandleRevive;
+            Enemy.NearMiss += HandleNearMiss;
         }
 
         private void OnDisable()
@@ -62,6 +65,7 @@ namespace TarodevController
             _player.TakeDamage -= HandleDeath;
             _player.Revive -= HandleRevive;
             _moveParticles.Stop();
+            Enemy.NearMiss -= HandleNearMiss;
         }
 
         private void Update()
@@ -83,11 +87,22 @@ namespace TarodevController
         {
             isDead = true;
             _sprite.sprite = _dead;
+            ClearParticles(_SuccessParticles);
+            _DefeatParticles.Play();
         }
+
+        private void ClearParticles(ParticleSystem ps)
+        {
+            ps.Stop();
+            ps.Clear();
+        }
+
         private void HandleRevive()
         {
             isDead = false;
             _sprite.sprite = _alive;
+            ClearParticles(_DefeatParticles);
+            _SuccessParticles.Play();
         }
 
         private void HandleSpriteFlip(float xInput)
@@ -126,6 +141,11 @@ namespace TarodevController
                 SetColor(_launchParticles);
                 _jumpParticles.Play();
             }
+        }
+
+        private void HandleNearMiss()
+        {
+            _SuccessParticles.Play();
         }
         
         private void OnGroundedChanged(bool grounded, float impact)
