@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class OffScreenIndicator : MonoBehaviour
 {
-    [SerializeField] private Texture2D _indicatorTexture;
-    [SerializeField] private Color _indicatorColor;
-    [SerializeField] private float _indicatorSize;
+    [Header("Information related to the indicator")]
+    [SerializeField] private Texture2D _texture;
+    [SerializeField] private Color _baseColor;
+    [SerializeField] private float _baseSize;
 
     private Camera mainCamera;
 
@@ -33,7 +34,7 @@ public class OffScreenIndicator : MonoBehaviour
 
             // Calculate the scale based on the distance from the camera
             var scale = Mathf.Lerp(farAwayScale, closeScale, Mathf.InverseLerp(farOffPos, 0, yPos));
-            float scaledIndicatorSize = _indicatorSize * scale;
+            float scaledIndicatorSize = _baseSize * scale;
             float halfSize = scaledIndicatorSize / 2;
 
             // Clamp the indicator position within the screen boundaries
@@ -47,8 +48,8 @@ public class OffScreenIndicator : MonoBehaviour
             Vector2 guiPos = new Vector2(indicatorPos.x, Screen.height - indicatorPos.y);
 
             Rect indicatorRect = new Rect(guiPos.x - halfSize, guiPos.y - halfSize, scaledIndicatorSize, scaledIndicatorSize);
-            GUI.color = _indicatorColor;
-            GUI.DrawTexture(indicatorRect, _indicatorTexture);
+            GUI.color = _baseColor;
+            GUI.DrawTexture(indicatorRect, _texture);
         }
     }
 }

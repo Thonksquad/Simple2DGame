@@ -8,6 +8,7 @@ namespace AudioSystem
 {
     public class TrackInfo
     {
+        [Header("All information related to the track")]
         public string Name = string.Empty;
         public AudioMixerGroup Group = null;
         public IEnumerator TrackFader = null;
@@ -15,6 +16,7 @@ namespace AudioSystem
 
     public class AudioPoolItem
     {
+        [Header("All information related to item in the pool")]
         public GameObject GameObject = null;
         public Transform Transform = null;
         public AudioSource AudioSource = null;

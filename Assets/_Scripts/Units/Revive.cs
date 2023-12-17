@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class Revive : MonoBehaviour
 {
+    [Tooltip("Sound to play when missed")]
     [SerializeField] AudioClip _missedClip;
     private Transform _player;
     private Action<Revive> _killAction;

@@ -7,7 +7,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [Tooltip("Sound to play when player dodges")]
     [SerializeField] AudioClip _soundClip;
+    [Tooltip("Particle source")]
     [SerializeField] ParticleSystem _particleSystem;
     private PlayerController _player;
     private Action<Enemy> _killAction;

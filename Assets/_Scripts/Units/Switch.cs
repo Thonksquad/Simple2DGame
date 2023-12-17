@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Switch : MonoBehaviour
 {
+    [Tooltip ("Reference to which switch")]
     [SerializeField] private Sprite _switch;
+    [Tooltip ("Sprite when pressed")]
     [SerializeField] private Sprite _pressed;
 
     private SpriteRenderer _spriteRenderer;

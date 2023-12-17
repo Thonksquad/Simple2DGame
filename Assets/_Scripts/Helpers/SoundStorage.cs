@@ -14,13 +14,7 @@ public class SoundStorage : MonoBehaviour
     [Tooltip("Theme for when character is dead")]
     [SerializeField] AudioClip _deadMusic;
 
-    // basic range of UI sound clips
-    [Tooltip("General shop purchase clip.")]
-    [SerializeField] AudioClip _transactionSound;
-    [Tooltip("General error sound.")]
-    [SerializeField] AudioClip _defaultWarningSound;
-
-    [Header("Game Sounds")]
+    [Header("Player emitted Sounds")]
     [Tooltip("Near miss sound effect")]
     [SerializeField] AudioClip _nearMissSound;
     [Tooltip("Level up or level win sound.")]
@@ -63,16 +57,6 @@ public class SoundStorage : MonoBehaviour
     {
         PlayVictorySound();
         Invoke(nameof(PlayAliveMusic), 1);
-    }
-
-    public void PlayTransactionSound()
-    {
-        AudioHandler.Instance.PlayOneShotSound("UI", _transactionSound, transform.position, .5f, 0f, 110);
-    }
-
-    public void PlayErrorSound()
-    {
-        AudioHandler.Instance.PlayOneShotSound("UI", _defaultWarningSound, transform.position, .5f, 0f, 120);
     }
 
     public void PlayVictorySound()

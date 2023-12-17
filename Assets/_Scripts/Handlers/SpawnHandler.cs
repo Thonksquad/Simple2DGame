@@ -8,19 +8,27 @@ using UnityEngine.Pool;
 
 public class SpawnHandler : MonoBehaviour
 {
+    [Header("References to instantiated prefabs")]
     [SerializeField] private Enemy _spikesPrefab;
     [SerializeField] private Revive _revivePrefab;
-    [SerializeField] private float _startingSpikes;
-    [SerializeField] private float _currentSpikes;
-    [SerializeField] private float _startingRevives;
-    [SerializeField] private float _currentRevive;
-    [SerializeField] private int _MaxSpikes;
-    [SerializeField] private int _MaxRevives;
-    [SerializeField] private bool _useSpikesPool;
-    [SerializeField] private bool _useRevivePool;
+
+    [Header("References to external objects")]
     [SerializeField] private PlayerController _player;
     [SerializeField] private RedSwitch _startSwitch;
     [SerializeField] private GameHandler _gameHandler;
+
+    [Header("Spike pool relevant information")]
+    [SerializeField] private float _startingSpikes;
+    [SerializeField] private float _currentSpikes;
+    [SerializeField] private int _maxSpikes;
+    [SerializeField] private bool _useSpikesPool;
+
+    [Header("Revive pool relevant information")]
+    [SerializeField] private float _startingRevives;
+    [SerializeField] private float _currentRevive;
+    [SerializeField] private int _maxRevives;
+    [SerializeField] private bool _useRevivePool;
+
 
     public Coroutine CurrentSpawn;
     private ObjectPool<Enemy> _enemyPool;
@@ -112,7 +120,7 @@ public class SpawnHandler : MonoBehaviour
             spawn.Init(KillEnemy);
         }
 
-        if (_currentSpikes < _MaxSpikes)
+        if (_currentSpikes < _maxSpikes)
         {
             _currentSpikes += 1.5f;
         }
@@ -127,7 +135,7 @@ public class SpawnHandler : MonoBehaviour
             spawn.Init(KillRevive);
         }
 
-        if (_currentRevive < _MaxRevives)
+        if (_currentRevive < _maxRevives)
         {
             _currentRevive += .25f;
         }
