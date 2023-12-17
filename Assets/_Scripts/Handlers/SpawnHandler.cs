@@ -109,6 +109,7 @@ public class SpawnHandler : MonoBehaviour
     public void HandleGameFinish()
     {
         StopCoroutine(CurrentSpawn);
+        StopAllCoroutines();
     }
 
     private void SpawnObstacles()
